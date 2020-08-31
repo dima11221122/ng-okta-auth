@@ -1,0 +1,13 @@
+{
+  "name": "ng-okta-auth",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^9.1.12 || ^10.0.14",
+    "@angular/core": "^9.1.12 || ^10.0.14",
+    "@angular/router": "^9.1.12 || ^10.0.14",
+    "tslib": "^1.13.0 || ^2.0.0"
+  },
+  "dependencies": {
+    "@okta/okta-auth-js": "^4.0.0"
+  }
+}
