@@ -1,4 +1,4 @@
-ng-okta-auth
+# ng-okta-auth
 
 This is an angular wrapper for [Okta Auth JavaScript SDK](https://github.com/okta/okta-auth-js). 
 
