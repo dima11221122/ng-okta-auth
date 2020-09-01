@@ -62,10 +62,6 @@ export class OktaAuthService {
     return (new URL(this.authParams.issuer)).origin;
   }
 
-  isAuthProviderUrl(url: string): boolean {
-    return url.startsWith(this.getAuthProviderOrigin());
-  }
-
   getUserInfo(): Observable<OktaUserInfo> {
     return this.httpClient.get<OktaUserInfo>(`${this.getAuthProviderOrigin()}/api/v1/users/me`, { withCredentials: true });
   }
