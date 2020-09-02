@@ -4,7 +4,7 @@ This is an angular wrapper for [Okta Auth JavaScript SDK](https://github.com/okt
 
 ## Quick start
 
-1. npm i ng-okta-auth
+1. `npm i ng-okta-auth`
 2. In `app.module` import `OktaAuthModule.forRoot()` and provide the necessary configuration:
 ```typescript
 import { OKTA_AUTH_PARAMS, OKTA_UNAUTHORIZED_URL, OktaAuthModule, OktaAuthParams, OKTA_USER_STORE } from 'ng-okta-auth';
