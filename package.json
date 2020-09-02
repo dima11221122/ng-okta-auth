@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:watch": "ng build ng-okta-auth --watch",
-    "build:prod": "ng build ng-okta-auth --prod",
+    "build:prod": "ng build ng-okta-auth --prod && node copy-readme.js",
     "test": "ng test ng-okta-auth",
     "lint": "ng lint",
     "e2e": "ng e2e"
