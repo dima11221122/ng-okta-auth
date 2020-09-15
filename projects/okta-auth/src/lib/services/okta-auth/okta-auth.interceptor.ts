@@ -27,11 +27,6 @@ export class OktaAuthInterceptor implements HttpInterceptor {
    * Put authorization token in every request. If token doesn't exist he will be redirected on the login page
    */
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Skip non-local requests
-    if (!request.url.startsWith('/')) {
-      return next.handle(request);
-    }
-
     return this.authService.getAccessTokenInfo().pipe(
       switchMap((accessTokenInfo) => {
         if (!accessTokenInfo) {
