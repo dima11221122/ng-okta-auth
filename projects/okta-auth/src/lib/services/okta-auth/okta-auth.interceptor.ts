@@ -29,6 +29,10 @@ export class OktaAuthInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return this.authService.getAccessTokenInfo().pipe(
       switchMap((accessTokenInfo) => {
+        if (request.url.startsWith('https://tintri.oktapreview.com')) {
+          return next.handle(request);
+        }
+
         if (!accessTokenInfo) {
           this.router.navigate([this.unauthorizedUrl]);
           return EMPTY;
