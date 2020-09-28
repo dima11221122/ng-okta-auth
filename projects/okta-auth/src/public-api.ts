@@ -8,4 +8,4 @@ export * from './lib/tokens/okta-auth-params-token';
 export * from './lib/tokens/okta-unauthorized-url-token';
 export * from './lib/tokens/okta-user-store-token';
 export * from './lib/services/okta-auth/okta-auth.service';
-
+export * from './lib/services/okta-auth/okta-unauthorized-error';

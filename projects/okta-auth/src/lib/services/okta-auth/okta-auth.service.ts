@@ -30,7 +30,7 @@ export class OktaAuthService {
    * Request authorization token and put it in store
    */
   initAuthorization(): Observable<OktaUserInfo | null> {
-    return defer(() => this.authClient.session.exists())
+    return defer(() => from(this.authClient.session.exists()))
       .pipe(
         switchMap((res) => {
           if (res) {
@@ -67,7 +67,7 @@ export class OktaAuthService {
   }
 
   login(username: string, password: string): Observable<OktaUserInfo> {
-    return defer(() => this.authClient.signIn({ username, password }))
+    return defer(() => from(this.authClient.signIn({ username, password })))
       .pipe(
         switchMap((transaction: AuthTransaction) => {
           if (transaction.status !== 'SUCCESS') {
@@ -81,7 +81,7 @@ export class OktaAuthService {
         }),
         tap((res) => this.saveTokens(res)),
         switchMap(() => this.getUserInfo()),
-        tap((userInfo: OktaUserInfo) => this.userStore?.setOktaUser(userInfo))
+        tap((userInfo: OktaUserInfo) => this.userStore?.setOktaUser(userInfo)),
       );
 
   }
@@ -94,7 +94,7 @@ export class OktaAuthService {
    * access token because he does not have access to ISP app
    */
   checkAuthenticated(): Observable<boolean> {
-    return defer(() => this.authClient.session.exists() as Promise<boolean>)
+    return defer(() => from(this.authClient.session.exists()))
       .pipe(
         switchMap((isAuthenticated: boolean) => {
           if (isAuthenticated) {
@@ -117,9 +117,9 @@ export class OktaAuthService {
   }
 
   logout(): Observable<void> {
-    return defer(() => this.authClient.signOut({
+    return defer(() => from(this.authClient.signOut({
       postLogoutRedirectUri: this.getFullUrl(this.unauthorizedUrl)
-    }))
+    })))
       .pipe(
         mapTo(undefined),
         tap(() => this.userStore?.resetUser())

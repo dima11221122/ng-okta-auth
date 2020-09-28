@@ -1,6 +1,6 @@
 {
   "name": "ng-okta-auth",
-  "version": "0.0.6",
+  "version": "0.0.11",
   "homepage": "https://github.com/dima11221122/ng-okta-auth",
   "bugs": "https://github.com/dima11221122/ng-okta-auth/issues",
   "peerDependencies": {

@@ -5,11 +5,12 @@ import {
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { OktaAuthService } from './okta-auth.service';
 import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { OKTA_UNAUTHORIZED_URL } from '../../tokens/okta-unauthorized-url-token';
+import { OktaUnauthorizedError } from './okta-unauthorized-error';
 
 /**
  * This interceptor for preventing unauthorized access for protected endpoints
@@ -35,7 +36,7 @@ export class OktaAuthInterceptor implements HttpInterceptor {
 
         if (!accessTokenInfo) {
           this.router.navigate([this.unauthorizedUrl]);
-          return EMPTY;
+          return throwError(new OktaUnauthorizedError());
         } else {
           const newRequest = request.clone({
             headers: request.headers.append('Authorization', `Bearer ${accessTokenInfo.value}`)
