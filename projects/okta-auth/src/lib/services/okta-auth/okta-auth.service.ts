@@ -109,7 +109,7 @@ export class OktaAuthService {
   }
 
   getAccessTokenInfo(): Observable<Token> {
-    return from(this.authClient.tokenManager.get(ACCESS_TOKEN_KEY));
+    return defer(() => from(this.authClient.tokenManager.get(ACCESS_TOKEN_KEY)));
   }
 
   private getFullUrl(path: string): string {
