@@ -10,6 +10,13 @@ import { OKTA_UNAUTHORIZED_URL } from '../../tokens/okta-unauthorized-url-token'
 import { OKTA_USER_STORE } from '../../tokens/okta-user-store-token';
 import { OktaUserStore } from '../../models/okta-user-store';
 
+// AuthTransaction interface is missing "user" fieild. 
+// The interface below could be removed in the future when AuthTransaction interface
+// will be updated in the @okta/okta-auth-js library.
+
+interface IAuthTransaction extends AuthTransaction {
+  user?: OktaUserInfo
+};
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 
@@ -66,13 +73,15 @@ export class OktaAuthService {
     return this.httpClient.get<OktaUserInfo>(`${this.getAuthProviderOrigin()}/api/v1/users/me`, { withCredentials: true });
   }
 
-  login(username: string, password: string): Observable<OktaUserInfo> {
-    return defer(() => from(this.authClient.signIn({ username, password })))
+  login(username: string, password: string): Observable<TokenResponse> {
+    return defer(() => from(this.authClient.signInWithCredentials({ username, password })))
       .pipe(
-        switchMap((transaction: AuthTransaction) => {
+        switchMap((transaction: IAuthTransaction) => {
           if (transaction.status !== 'SUCCESS') {
             throw Error('We cannot handle the ' + transaction.status + ' status');
           }
+
+          this.userStore?.setOktaUser(transaction.user);
 
           return from(this.authClient.token.getWithoutPrompt({
             sessionToken: transaction.sessionToken,
@@ -80,10 +89,7 @@ export class OktaAuthService {
           }));
         }),
         tap((res) => this.saveTokens(res)),
-        switchMap(() => this.getUserInfo()),
-        tap((userInfo: OktaUserInfo) => this.userStore?.setOktaUser(userInfo)),
       );
-
   }
 
   /**
@@ -132,8 +138,12 @@ export class OktaAuthService {
 
   private saveTokens(res: TokenResponse | true): void {
     if (res && this.isTokenResponse(res) && res.tokens.idToken && res.tokens.accessToken) {
-      this.authClient.tokenManager.add('idToken', res.tokens.idToken);
-      this.authClient.tokenManager.add(ACCESS_TOKEN_KEY, res.tokens.accessToken);
+      const { idToken, accessToken } = res.tokens;
+
+      this.authClient.tokenManager.setTokens({
+        idToken,
+        accessToken 
+      });
     }
   }
 }
